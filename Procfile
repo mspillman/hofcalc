@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run hofcalc.py
+web: sh setup.sh && streamlit run --server.port $PORT hofcalc.py
