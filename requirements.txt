@@ -1,0 +1,5 @@
+streamlit==0.79.0
+pandas==1.2.3
+numpy==1.18.5
+pubchempy==1.0.4
+chemparse==0.1.0
