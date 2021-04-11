@@ -1,1 +1,1 @@
-worker: sh setup.sh && streamlit run hofcalc.py
+web: sh setup.sh && streamlit run hofcalc.py
