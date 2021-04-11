@@ -85,7 +85,7 @@ def get_formula(advanced=False, key=1):
                 molecular_formula = chemparse.parse_formula(
                                                     molecule.molecular_formula)
             except Exception as e:
-                st.write("Error - unable to find",user_input,"on pubchem \
+                st.write("Error - unable to find",user_input,"on PubChem \
                         when searching by",search_mode+".")
                 molecular_formula = None
 
@@ -181,11 +181,11 @@ elif option == "Advanced":
                 st.write("Unit cell ÷ 18Å =", str(np.around(unit_cell_volume / total_18, 2)))
 
 else:
-    st.write("Average crystallographic volumes reported by Hofmann \
+    st.write("Average crystallographic volumes reported by Hofmann at 298 K \
             (see references)")
     volume_df = pd.DataFrame.from_dict(volumes, columns=["Volume"],
                                         orient="index", dtype=float)
-    st.table(volume_df)
+    st.table(volume_df.style.format('{:.2f}'))
 
 
 st.sidebar.write("")
