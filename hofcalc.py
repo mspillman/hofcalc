@@ -30,45 +30,46 @@ if option == "Volume Estimation":
                                 min_value=0.0, max_value=None, value=0.0,
                                 step=100.0)
     molecular_formula = hu.get_formula()
-    total_hofmann = 0
+    total_volume = 0
     st.write("")
     st.write("")
     if molecular_formula is not None:
         st.markdown("**Results**")
-        with st.beta_expander(label="Individual", expanded=False):
-            individual_volumes = []
-            col1, col2, col3 = st.beta_columns(3)
-            with col1:
-                st.markdown("***Input***")
-            with col2:
-                st.markdown("***Formula***")
-            with col3:
-                st.markdown("***Volume***")
-            for mf in molecular_formula["individual"].keys():
-                individual_volumes.append(hu.get_volume(
-                                            molecular_formula["individual"][mf],
-                                            temperature=temperature))
-
-            for mf, volume in zip(molecular_formula["individual"],
-                                                        individual_volumes):
+        if len(molecular_formula["individual"].keys()) > 1:
+            with st.beta_expander(label="Individual", expanded=False):
+                individual_volumes = []
+                col1, col2, col3 = st.beta_columns(3)
                 with col1:
-                    st.write(mf)
+                    st.markdown("***Input***")
                 with col2:
-                    mf = molecular_formula["individual"][mf]
-                    mf_string = ""
-                    for key, val in mf.items():
-                        mf_string += key + str(val) + " "
-                    st.write(mf_string)
+                    st.markdown("***Formula***")
                 with col3:
-                    st.write(volume)
-        for i in range(3):
-            st.write("")
-        total_hofmann = hu.get_volume(molecular_formula["combined"],
+                    st.markdown("***Volume***")
+                for mf in molecular_formula["individual"].keys():
+                    individual_volumes.append(hu.get_volume(
+                                                molecular_formula["individual"][mf],
+                                                temperature=temperature))
+                for mf, volume in zip(molecular_formula["individual"],
+                                    individual_volumes):
+                    with col1:
+                        st.write(mf)
+                    with col2:
+                        mf = molecular_formula["individual"][mf]
+                        mf_string = ""
+                        for key, val in mf.items():
+                            mf_string += key + str(val) + " "
+                        st.write(mf_string)
+                    with col3:
+                        st.write(volume)
+            for i in range(3):
+                st.write("")
+            molecular_formula["individual_volumes"] = individual_volumes
+        total_volume = hu.get_volume(molecular_formula["combined"],
                                         temperature=temperature)
         col1, col2, col3 = st.beta_columns(3)
         with col1:
             st.write("Total Volume:")
-            st.markdown(str(round(total_hofmann, 3))+" $Å^3$")
+            st.markdown(str(round(total_volume, 3))+" $Å^3$")
         with col2:
             mf = molecular_formula["combined"]
             mf_string = ""
@@ -79,13 +80,12 @@ if option == "Volume Estimation":
         if unit_cell_volume != 0:
             with col3:
                 st.write("$$\\frac{V_{Cell}}{V_{Hofmann}}$$", "=",
-                            str(round(unit_cell_volume / total_hofmann, 2)))
-                molecular_formula["unit_cell_volume / total_hofmann"] = round(
-                                        unit_cell_volume / total_hofmann, 2)
+                            str(round(unit_cell_volume / total_volume, 2)))
+                molecular_formula["V_Cell / V_Hofmann"] = round(
+                                        unit_cell_volume / total_volume, 2)
         for i in range(2):
             st.write("")
-        molecular_formula["individual_volumes"] = individual_volumes
-        molecular_formula["total_volume"] = total_hofmann
+        molecular_formula["total_volume"] = total_volume
         molecular_formula["temperature"] = temperature
 
 
@@ -126,8 +126,8 @@ elif option == "Instructions and References":
         st.write("")
     with st.beta_expander(label="Temperature", expanded=False):
         """
-        The temperature (in kelvin) can be entered, which will automatically be
-        applied to the volume calculation using the following equation:
+        The temperature (in kelvin) is automatically applied to the volume
+        calculation using the following equation:
         """
         st.latex("V = \\sum{n_{i}v_{i}(1 +  \\alpha(T - 298))}")
         """
@@ -138,9 +138,8 @@ elif option == "Instructions and References":
         st.write("")
     with st.beta_expander(label="Unit Cell", expanded=False):
         """
-        If the volume of a unit cell is supplied, then in addition to displaying
-        the estimated volume, the cell volume divided by the estimated molecular
-        volume will also be shown.
+        If the volume of a unit cell is supplied, then the unit cell volume
+        divided by the estimated molecular volume will also be shown.
         """
         search_terms = [["zopiclone, 2H2O", "1874.61", "496.02", "3.78"],
                         ["verapamil, HCl", "1382.06", "667.57", "2.07"]]
