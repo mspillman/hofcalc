@@ -74,6 +74,7 @@ def get_formula(autodetect=True, key=1):
             user_input = ("".join(
                                 user_input)).replace("<sub","").replace(
                                                     "</sub","").replace(" ","")
+            st.write("Interpreting formula as", user_input)
         molecular_formulae = []
         user_input = user_input.replace("+", "")
         user_input = user_input.replace("-", "")
