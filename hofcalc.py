@@ -140,7 +140,7 @@ st.sidebar.title("Options")
 
 with st.sidebar:
     option = st.radio("Select function",
-                ["Volume estimation","Display Hofmann volumes"])
+                ["Volume estimation","Examples","Display Hofmann volumes"])
     for i in range(6):
         st.write("")
     with st.beta_expander(label="References", expanded=False):
@@ -153,6 +153,7 @@ with st.sidebar:
         st.write("")
         st.write("")
         st.write("WebApp designed by Mark Spillman")
+        st.write("https://github.com/mspillman/hofcalc")
 
 if option == "Volume estimation":
     mfs = []
@@ -169,8 +170,8 @@ if option == "Volume estimation":
                                                                     key=None)
     with col3:
         if not autodetect:
-            number_of_fragments = st.number_input("Number of fragments", min_value=1,
-                                max_value=None, value=1, step=1)
+            number_of_fragments = st.number_input("Number of fragments",
+                                min_value=1, max_value=None, value=1, step=1)
         else:
             number_of_fragments = 1
     for i in range(number_of_fragments):
@@ -219,9 +220,72 @@ if option == "Volume estimation":
                                         unit_cell_volume / total_hofmann, 3)))
             #with col2:
             #    st.write("Unit cell ÷ 18Å =", str(round(unit_cell_volume / total_18, 2)))
+elif option == "Examples":
+    with st.beta_expander(label="Example inputs", expanded=True):
+        """
+        There are a number of acceptable inputs that can be used to estimate
+        crystallographic volumes using Hofcalc.
 
+        The simplest option is to enter the chemical formula, name, SMILES or
+        InChI of the material of interest, e.g.
+        """
+        search_terms = [["CH3CH2OH", 69.61],
+                        ["ethanol", 69.61], ["OCC", 69.61], ["InChI=1S/C2H6O/\
+                        c1-2-3/h3H,2H2,1H3", 69.61]]
+        df = pd.DataFrame(search_terms, columns=["Search term", "Volume"])
+        st.table(df)
+        st.write("")
+        """
+        It is also possible to search for multiple items of any type at
+        the same time, provided that they can be separated by a space e.g.
+        """
+        search_terms = [["carbamazepine indomethacin", 731.97],
+                        ["zopiclone 2H2O", 496.02], ["C15H12N2O CH3CH2COO- Na+",
+                        419.79]]
+        df = pd.DataFrame(search_terms, columns=["Search term", "Volume"])
+        st.table(df)
+        """
+        However, this can cause problems when the name of a compound requires
+        multiple words, for example "acetic acid".
+
+        If this occurs, uncheck the  "Autodetect Fragments" checkbox, and
+        try again.
+
+        It is possible to manually add additional fragments using the
+        Number of fragments element that appears when the checkbox is unchecked
+        """
+        search_terms = [["acetic acid", 70.84],
+                        ["verapamil hydrochloride", 667.57], ["sodium salicylate",
+                        182.66]]
+        df = pd.DataFrame(search_terms, columns=["Search term", "Volume"])
+        st.table(df)
+    for i in range(3):
+        st.write("")
+    with st.beta_expander(label="Temperature", expanded=True):
+        """
+        The temperature (in kelvin) can be entered, which will automatically be
+        applied to the volume calculation using the follwing equation:
+        """
+        st.latex("V = \\sum{n_{i}v_{i}(1 +  \\alpha(T - 298))}")
+        """
+        Where
+        """
+        st.latex("\\alpha = 0.95 \\times 10^{-4}")
+    for i in range(3):
+        st.write("")
+    with st.beta_expander(label="Unit Cell", expanded=True):
+        """
+        If the volume of a unit cell is supplied, then in addition to displaying
+        the estimated volume, the cell volume divided by the estimated molecular
+        volume will also be shown.
+        """
+        search_terms = [["zopiclone 2H2O", 1874.61, 496.02, 3.78],
+                        ["verapamil HCl", 1382.06, 667.57, 2.07]]
+        df = pd.DataFrame(search_terms, columns=["Search term",
+                    "Unit Cell Volume", "Hofmann Volume", "Vcell / VHofmann"])
+        st.table(df)
 else:
-    st.write("Average crystallographic volumes reported by Hofmann at 298 K \
+    st.write("Average crystallographic volumes at 298 K reported by Hofmann \
             (see references)")
     volume_df = pd.DataFrame.from_dict(volumes, columns=["Volume"],
                                         orient="index", dtype=float)
