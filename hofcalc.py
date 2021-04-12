@@ -117,8 +117,11 @@ with st.sidebar:
         st.write("Hofmann, D.W.M. (2002), Fast estimation of crystal densities.\
             Acta Cryst. B, 58: 489-493. \
             https://doi.org/10.1107/S0108768101021814")
-        st.sidebar.write("")
-        st.sidebar.write("")
+        st.write("")
+        st.write("")
+        st.write("PubChem: https://pubchem.ncbi.nlm.nih.gov/")
+        st.write("")
+        st.write("")
         st.write("WebApp designed by Mark Spillman")
 
 if option == "Volume estimation":
@@ -152,13 +155,13 @@ if option == "Volume estimation":
     if len(mfs) != 0:
         st.markdown("**Results**")
         if number_of_fragments > 1:
-            col1, col2 = st.beta_columns(2)
-            with col1:
-                expander1 = st.beta_expander(label="Individual Hofmann",
-                                            expanded=False)
-            with col2:
-                expander2 = st.beta_expander(label="Individual 18 ångström",
-                                            expanded=False)
+            #col1, col2 = st.beta_columns(2)
+            #with col1:
+            expander1 = st.beta_expander(label="Individual Hofmann", 
+                            expanded=False)
+            #with col2:
+            #    expander2 = st.beta_expander(label="Individual 18 ångström",
+            #                                expanded=False)
         for i, molecular_formula in enumerate(mfs):
             if molecular_formula is not None:
                 volume = get_volume(molecular_formula, temperature=temperature)
@@ -166,9 +169,9 @@ if option == "Volume estimation":
                     with expander1:
                         st.markdown("Hofmann volume (frag "+str(i+1)+
                                     ") = " + str(volume[0])+" $Å^3$")
-                    with expander2:
-                        st.markdown("18 ångström rule (frag "+str(i+1)+
-                                    ") = " + str(volume[1])+" $Å^3$")
+                    #with expander2:
+                    #    st.markdown("18 ångström rule (frag "+str(i+1)+
+                    #                ") = " + str(volume[1])+" $Å^3$")
                 total_hofmann += volume[0]
                 total_18 += volume[1]
         if number_of_fragments > 1:
@@ -177,13 +180,14 @@ if option == "Volume estimation":
         col1, col2 = st.beta_columns(2)
         with col1:
             st.markdown("Total Hofmann volume = "+str(total_hofmann)+" $Å^3$")
-        with col2:
-            st.markdown("Total 18 ångström rule = "+str(total_18)+" $Å^3$")
+        #with col2:
+        #    st.markdown("Total 18 ångström rule = "+str(total_18)+" $Å^3$")
         if unit_cell_volume != 0:
             with col1:
-                st.write("Unit cell ÷ Hofmann =", str(round(unit_cell_volume / total_hofmann, 2)))
-            with col2:
-                st.write("Unit cell ÷ 18Å =", str(round(unit_cell_volume / total_18, 2)))
+                st.write("Unit cell ÷ Hofmann =", str(round(
+                                        unit_cell_volume / total_hofmann, 2)))
+            #with col2:
+            #    st.write("Unit cell ÷ 18Å =", str(round(unit_cell_volume / total_18, 2)))
 
 else:
     st.write("Average crystallographic volumes reported by Hofmann at 298 K \
