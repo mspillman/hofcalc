@@ -35,7 +35,8 @@ def get_volume(formula, volumes=volumes, temperature=298):
             if element != "H":
                 eighteen_angstrom_volume += 18*formula[element]
             if volumes[element] is not np.nan:
-                volume += (volumes[element] * formula[element])*(1+alpha*temperature)
+                volume += (volumes[element] *
+                                formula[element])*(1+alpha*(temperature - 298))
             else:
                 st.write("Element", element, "does not have a Hofmann volume")
                 st.write("Using the 18-angstrom rule to estimate missing volume")
@@ -52,6 +53,7 @@ def get_formula(advanced=False, key=1):
         if user_input != "":
             try:
                 user_input = user_input.replace(" ", "")
+                user_input = user_input.replace("|", "")
                 molecular_formula = chemparse.parse_formula(user_input)
             except KeyError:
                 st.write("Unable to parse formula",user_input)
@@ -149,10 +151,10 @@ elif option == "Advanced":
         if number_of_fragments > 1:
             col1, col2 = st.beta_columns(2)
             with col1:
-                expander1 = st.beta_expander(label="Individual Hofmann", 
+                expander1 = st.beta_expander(label="Individual Hofmann",
                                             expanded=False)
             with col2:
-                expander2 = st.beta_expander(label="Individual 18 ångström", 
+                expander2 = st.beta_expander(label="Individual 18 ångström",
                                             expanded=False)
         for i, molecular_formula in enumerate(mfs):
             if molecular_formula is not None:
