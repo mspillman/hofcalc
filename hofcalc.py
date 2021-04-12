@@ -26,7 +26,7 @@ volumes = {"H" : 5.08, "He" : math.nan, "Li" : 22.6, "Be" : 36., "B" : 13.24,
     "Es" : math.nan, "Fm" : math.nan}
 
 def get_volume(formula, volumes=volumes, temperature=298):
-    volume = 0
+    volume = 0.0
     alpha = 0.95e-4
     eighteen_angstrom_volume = 0
     for element in formula.keys():
@@ -38,12 +38,12 @@ def get_volume(formula, volumes=volumes, temperature=298):
                 eighteen_angstrom_volume += 18*formula[element]
             if volumes[element] is not math.nan:
                 volume += (volumes[element] *
-                                formula[element])*(1+alpha*(temperature - 298))
+                                formula[element])*(1.+alpha*(temperature - 298.))
             else:
                 st.write("Element", element, "does not have a Hofmann volume")
                 st.write("Using the 18-angstrom rule to estimate missing volume")
                 volume += 18 * formula[element]
-    return round(volume, 1), eighteen_angstrom_volume
+    return round(volume, 2), eighteen_angstrom_volume
 
 def get_formula(autodetect=True, key=1):
     #formula_option = st.radio("",
@@ -192,13 +192,13 @@ if option == "Volume estimation":
             st.write("")
         col1, col2 = st.beta_columns(2)
         with col1:
-            st.markdown("Total Hofmann volume = "+str(total_hofmann)+" $Å^3$")
+            st.markdown("Total Hofmann volume = "+str(round(total_hofmann, 3))+" $Å^3$")
         #with col2:
         #    st.markdown("Total 18 ångström rule = "+str(total_18)+" $Å^3$")
         if unit_cell_volume != 0:
             with col1:
                 st.write("Unit cell ÷ Hofmann =", str(round(
-                                        unit_cell_volume / total_hofmann, 2)))
+                                        unit_cell_volume / total_hofmann, 3)))
             #with col2:
             #    st.write("Unit cell ÷ 18Å =", str(round(unit_cell_volume / total_18, 2)))
 
