@@ -52,7 +52,7 @@ def get_formula(autodetect=True, key=1):
     col1, col2 = st.beta_columns([3,1])
     with col2:
         search_mode = st.selectbox("Search by:",
-                    ["Name","SMILES", "InChI"], key=key)
+                    ["Name","SMILES"], key=key)
     with col1:
         if search_mode == "Name":
             user_input = st.text_input("Enter chemical formula or compound name",
@@ -60,10 +60,6 @@ def get_formula(autodetect=True, key=1):
                     key=key, type='default')
         elif search_mode == "SMILES":
             user_input = st.text_input("Enter chemical formula or compound SMILES",
-                    value='', max_chars=None,
-                    key=key, type='default')
-        else:
-            user_input = st.text_input("Enter chemical formula or compound InChI",
                     value='', max_chars=None,
                     key=key, type='default')
     if user_input != "":
@@ -98,7 +94,7 @@ def get_formula(autodetect=True, key=1):
                         f = Formula(molecule.molecular_formula)
                         mf = f.atom_stoich
                     except:
-                        other_modes = ["name", "smiles", "inchi"]
+                        other_modes = ["name", "smiles"]
                         other_modes.remove(search_mode.lower())
                         result = False
                         for om in other_modes:
@@ -115,8 +111,7 @@ def get_formula(autodetect=True, key=1):
                             st.write("Unable to parse",component,"as a chemical \
                                 formula or find it on PubChem when searching by",
                                 search_mode+".")
-                            st.write("Subsequent searches by name and SMILES \
-                                also failed.")
+                            st.write("Subsequent search by",other_modes[0],"also failed")
                             return None
                 molecular_formulae.append(mf)
         molecular_formula = defaultdict(int)
@@ -226,22 +221,21 @@ elif option == "Examples":
         There are a number of acceptable inputs that can be used to estimate
         crystallographic volumes using Hofcalc.
 
-        The simplest option is to enter the chemical formula, name, SMILES or
-        InChI of the material of interest, e.g.
+        The simplest option is to enter the chemical formula, name or SMILES
+        of the material of interest, e.g.
         """
-        search_terms = [["CH3CH2OH", 69.61],
-                        ["ethanol", 69.61], ["OCC", 69.61], ["InChI=1S/C2H6O/\
-                        c1-2-3/h3H,2H2,1H3", 69.61]]
-        df = pd.DataFrame(search_terms, columns=["Search term", "Volume"])
+        search_terms = [["CH3CH2OH", "Formula", "69.61"],
+                        ["ethanol", "name", "69.61"], ["OCC", "SMILES", "69.61"]]
+        df = pd.DataFrame(search_terms, columns=["Search term","Type","Volume"])
         st.table(df)
         st.write("")
         """
         It is also possible to search for multiple items of any type at
         the same time, provided that they can be separated by a space e.g.
         """
-        search_terms = [["carbamazepine indomethacin", 731.97],
-                        ["zopiclone 2H2O", 496.02], ["C15H12N2O CH3CH2COO- Na+",
-                        419.79]]
+        search_terms = [["carbamazepine indomethacin", "731.97"],
+                        ["zopiclone 2H2O", "496.02"], ["C15H12N2O CH3CH2COO- Na+",
+                        "419.79"]]
         df = pd.DataFrame(search_terms, columns=["Search term", "Volume"])
         st.table(df)
         """
@@ -254,9 +248,9 @@ elif option == "Examples":
         It is possible to manually add additional fragments using the
         Number of fragments element that appears when the checkbox is unchecked
         """
-        search_terms = [["acetic acid", 70.84],
-                        ["verapamil hydrochloride", 667.57], ["sodium salicylate",
-                        182.66]]
+        search_terms = [["acetic acid", "70.84"],
+                        ["verapamil hydrochloride", "667.57"], ["sodium salicylate",
+                        "182.66"]]
         df = pd.DataFrame(search_terms, columns=["Search term", "Volume"])
         st.table(df)
     for i in range(3):
@@ -279,8 +273,8 @@ elif option == "Examples":
         the estimated volume, the cell volume divided by the estimated molecular
         volume will also be shown.
         """
-        search_terms = [["zopiclone 2H2O", 1874.61, 496.02, 3.78],
-                        ["verapamil HCl", 1382.06, 667.57, 2.07]]
+        search_terms = [["zopiclone 2H2O", "1874.61", "496.02", "3.78"],
+                        ["verapamil HCl", "1382.06", "667.57", "2.07"]]
         df = pd.DataFrame(search_terms, columns=["Search term",
                     "Unit Cell Volume", "Hofmann Volume", "Vcell / VHofmann"])
         st.table(df)
