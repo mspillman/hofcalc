@@ -163,7 +163,8 @@ if option == "Volume estimation":
                                 min_value=0, max_value=None, value=298, step=10)
     with col2:
         unit_cell_volume = st.number_input("Unit cell volume (optional)",
-                                min_value=0, max_value=None, value=0, step=100)
+                                min_value=0.0, max_value=None, value=0.0,
+                                step=100.0)
     autodetect = st.checkbox("Autodetect fragments", value=True,
                                                                     key=None)
     with col3:
@@ -187,7 +188,7 @@ if option == "Volume estimation":
         if number_of_fragments > 1:
             #col1, col2 = st.beta_columns(2)
             #with col1:
-            expander1 = st.beta_expander(label="Individual Hofmann", 
+            expander1 = st.beta_expander(label="Individual Hofmann",
                             expanded=False)
             #with col2:
             #    expander2 = st.beta_expander(label="Individual 18 ångström",
