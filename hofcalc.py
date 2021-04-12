@@ -67,17 +67,19 @@ if option == "Volume Estimation":
                                         temperature=temperature)
         col1, col2, col3 = st.beta_columns(3)
         with col1:
-            st.markdown("Total Volume = "+str(round(total_hofmann, 3))+" $Å^3$")
+            st.write("Total Volume:")
+            st.markdown(str(round(total_hofmann, 3))+" $Å^3$")
         with col2:
             mf = molecular_formula["combined"]
             mf_string = ""
             for key, val in mf.items():
                 mf_string += key + str(val) + " "
-            st.write("Total atoms",mf_string)
+            st.write("Total atoms:")
+            st.write(mf_string)
         if unit_cell_volume != 0:
             with col3:
-                st.write("Unit cell ÷ Hofmann =", str(round(
-                                        unit_cell_volume / total_hofmann, 2)))
+                st.write("$$\\frac{V_{Cell}}{V_{Hofmann}}$$", "=",
+                            str(round(unit_cell_volume / total_hofmann, 2)))
                 molecular_formula["unit_cell_volume / total_hofmann"] = round(
                                         unit_cell_volume / total_hofmann, 2)
         for i in range(2):
@@ -87,7 +89,7 @@ if option == "Volume Estimation":
         molecular_formula["temperature"] = temperature
 
 
-        formula_json = json.dumps(molecular_formula)
+        formula_json = json.dumps(molecular_formula, indent=4)
         b64 = base64.b64encode(formula_json.encode()).decode()
         href = f'<a href="data:file/zip;base64,{b64}" download=\'{"hofcalc_summary.json"}\'>\
                 Download summary</a>'
