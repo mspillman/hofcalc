@@ -55,6 +55,10 @@ def get_formula(autodetect=True, key=1):
                     key=key, type='default')
     search_mode = "name"
     if user_input != "":
+        user_input = user_input.replace("L-","")
+        user_input = user_input.replace("l-","")
+        user_input = user_input.replace("D-","")
+        user_input = user_input.replace("d-","")
         if "<" in user_input:
             user_input = user_input.split("</font>")[0]
             user_input = user_input.split("<b>")[1]
@@ -126,7 +130,7 @@ st.markdown("*Crystallographic Volume Estimation*")
 st.sidebar.title("Options")
 
 with st.sidebar:
-    option = st.radio("Select function",
+    option = st.radio("",
                 ["Volume estimation","Instructions and references","Hofmann volumes (298 K)"])
 
 if option == "Volume estimation":
