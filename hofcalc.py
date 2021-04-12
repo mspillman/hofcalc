@@ -67,9 +67,22 @@ def get_formula(autodetect=True, key=1):
                     value='', max_chars=None,
                     key=key, type='default')
     if user_input != "":
+        if "<" in user_input:
+            user_input = user_input.split("</font>")[0]
+            user_input = user_input.split("<b>")[1]
+            user_input = user_input.split(">")[1:]
+            user_input = ("".join(
+                                user_input)).replace("<sub","").replace(
+                                                    "</sub","").replace(" ","")
         molecular_formulae = []
+        user_input = user_input.replace("+", "")
+        user_input = user_input.replace("-", "")
         if autodetect:
-            components = user_input.split(" ")
+            if "," in user_input:
+                components = user_input.split(",")
+                components = [x.replace(" ", "") for x in components]
+            else:
+                components = user_input.split(" ")
         else:
             components = [user_input]
         for component in components:
