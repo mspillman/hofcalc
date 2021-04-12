@@ -1,8 +1,9 @@
 import streamlit as st
 import pubchempy as pcp
-import chemparse
 import numpy as np
 import pandas as pd
+from pyvalem.formula import Formula
+from collections import defaultdict
 
 volumes = {"H" : 5.08, "He" : np.nan, "Li" : 22.6, "Be" : 36., "B" : 13.24,
     "C" : 13.87, "N" : 11.8, "O" : 11.39, "F" : 11.17, "Ne" : np.nan,
@@ -43,56 +44,56 @@ def get_volume(formula, volumes=volumes, temperature=298):
                 volume += 18 * formula[element]
     return np.around(volume, 1), eighteen_angstrom_volume
 
-def get_formula(advanced=False, key=1):
-    formula_option = st.radio("",
-            ["Search PubChem for compound","Enter chemical formula"], key=key)
-    if formula_option == "Enter chemical formula":
-        user_input = st.text_input("Enter chemical formula",
+def get_formula(autodetect=True, key=1):
+    #formula_option = st.radio("",
+    #        ["Search PubChem for compound","Enter chemical formula"], key=key)
+    #if formula_option == "Enter chemical formula":
+    col1, col2 = st.beta_columns([3,1])
+    with col2:
+        search_mode = st.selectbox("Search by:",
+                    ["Name","SMILES", "InChI"], key=key)
+    with col1:
+        if search_mode == "Name":
+            user_input = st.text_input("Enter chemical formula or compound name",
                     value='', max_chars=None,
                     key=key, type='default')
-        if user_input != "":
-            try:
-                user_input = user_input.replace(" ", "")
-                user_input = user_input.replace("|", "")
-                molecular_formula = chemparse.parse_formula(user_input)
-            except KeyError:
-                st.write("Unable to parse formula",user_input)
-                molecular_formula = None
+        elif search_mode == "SMILES":
+            user_input = st.text_input("Enter chemical formula or compound SMILES",
+                    value='', max_chars=None,
+                    key=key, type='default')
         else:
-            molecular_formula = None
+            user_input = st.text_input("Enter chemical formula or compound InChI",
+                    value='', max_chars=None,
+                    key=key, type='default')
+    if user_input != "":
+        molecular_formulae = []
+        if autodetect:
+            components = user_input.split(" ")
+        else:
+            components = [user_input]
+        for component in components:
+            if component != "":
+                try:
+                    component = component.replace("|", "")
+                    f = Formula(component)
+                    mf = f.atom_stoich
+                except:
+                    try:
+                        molecule = pcp.get_compounds(component, search_mode.lower())[0]
+                        f = Formula(molecule.molecular_formula)
+                        mf = f.atom_stoich
+                    except:
+                        st.write("Error")
+                        st.write("Unable to parse",component,"as a chemical formula \
+                        or find it on PubChem when searching by",search_mode+".")
+                        return None
+                molecular_formulae.append(mf)
+        molecular_formula = defaultdict(int)
+        for mf in molecular_formulae:
+            for key, value in mf.items():
+                molecular_formula[key] += value
     else:
-        col1, col2 = st.beta_columns([3,1])
-        with col2:
-            if advanced:
-                search_mode = st.selectbox("Search by:",
-                        ["Name","SMILES", "InChI"], key=key)
-            else:
-                search_mode = "Name"
-        with col1:
-            if search_mode == "Name":
-                user_input = st.text_input("Enter compound name",
-                        value='', max_chars=None,
-                        key=key, type='default')
-            elif search_mode == "SMILES":
-                user_input = st.text_input("Enter compound SMILES",
-                        value='', max_chars=None,
-                        key=key, type='default')
-            else:
-                user_input = st.text_input("Enter compound InChI",
-                        value='', max_chars=None,
-                        key=key, type='default')
-        if user_input != "":
-            try:
-                molecule = pcp.get_compounds(user_input, search_mode.lower())[0]
-                molecular_formula = chemparse.parse_formula(
-                                                    molecule.molecular_formula)
-            except Exception as e:
-                st.write("Error - unable to find",user_input,"on PubChem \
-                        when searching by",search_mode+".")
-                molecular_formula = None
-
-        else:
-            molecular_formula = None
+        molecular_formula = None
 
     return molecular_formula
 
@@ -108,38 +109,39 @@ st.sidebar.title("Options")
 
 with st.sidebar:
     option = st.radio("Select function",
-                    ["Basic","Advanced","Hofmann volumes"])
-
-if option == "Basic":
-    molecular_formula = get_formula()
-    if molecular_formula is not None:
+                ["Volume estimation","Display Hofmann volumes"])
+    for i in range(6):
         st.write("")
-        st.write("")
-        st.markdown("**Results**")
-        st.write("Assuming temperature = 298 K")
-        volume = get_volume(molecular_formula)
-        col1, col2 = st.beta_columns(2)
-        with col1:
-            st.markdown("Hofmann volume = "+str(volume[0])+" $Å^3$")
-        with col2:
-            st.markdown("18 ångström rule = "+str(volume[1])+" $Å^3$")
+    with st.beta_expander(label="References", expanded=False):
+        st.write("Hofmann, D.W.M. (2002), Fast estimation of crystal densities.\
+            Acta Cryst. B, 58: 489-493. \
+            https://doi.org/10.1107/S0108768101021814")
+        st.sidebar.write("")
+        st.sidebar.write("")
+        st.write("WebApp designed by Mark Spillman")
 
-elif option == "Advanced":
+if option == "Volume estimation":
     mfs = []
     col1, col2, col3 = st.beta_columns(3)
+
     with col1:
-        number_of_fragments = st.number_input("Number of fragments", min_value=1,
-                                max_value=None, value=1, step=1)
-    with col2:
         temperature = st.number_input("Temperature / K",
                                 min_value=0, max_value=None, value=298, step=10)
-    with col3:
+    with col2:
         unit_cell_volume = st.number_input("Unit cell volume (optional)",
                                 min_value=0, max_value=None, value=0, step=100)
+    autodetect = st.checkbox("Autodetect fragments", value=True,
+                                                                    key=None)
+    with col3:
+        if not autodetect:
+            number_of_fragments = st.number_input("Number of fragments", min_value=1,
+                                max_value=None, value=1, step=1)
+        else:
+            number_of_fragments = 1
     for i in range(number_of_fragments):
         if number_of_fragments > 1:
-            st.markdown("***Molecule "+str(i+1)+"***")
-        molecular_formula = get_formula(advanced=True, key=i)
+            st.markdown("***Fragment "+str(i+1)+"***")
+        molecular_formula = get_formula(autodetect=autodetect, key=i)
         if molecular_formula is not None:
             mfs.append(molecular_formula)
     total_hofmann = 0
@@ -161,10 +163,10 @@ elif option == "Advanced":
                 volume = get_volume(molecular_formula, temperature=temperature)
                 if number_of_fragments > 1:
                     with expander1:
-                        st.markdown("Hofmann volume (mol "+str(i+1)+
+                        st.markdown("Hofmann volume (frag "+str(i+1)+
                                     ") = " + str(volume[0])+" $Å^3$")
                     with expander2:
-                        st.markdown("18 ångström rule (mol "+str(i+1)+
+                        st.markdown("18 ångström rule (frag "+str(i+1)+
                                     ") = " + str(volume[1])+" $Å^3$")
                 total_hofmann += volume[0]
                 total_18 += volume[1]
@@ -190,16 +192,3 @@ else:
     st.table(volume_df.style.format('{:.2f}'))
 
 
-st.sidebar.write("")
-st.sidebar.write("")
-st.sidebar.write("")
-
-st.sidebar.write("")
-st.sidebar.write("")
-st.sidebar.write("")
-with st.sidebar.beta_expander(label="References", expanded=False):
-    st.write("Hofmann, D.W.M. (2002), Fast estimation of crystal densities.\
-        Acta Cryst. B, 58: 489-493. https://doi.org/10.1107/S0108768101021814")
-    st.sidebar.write("")
-    st.sidebar.write("")
-    st.write("WebApp designed by Mark Spillman")
