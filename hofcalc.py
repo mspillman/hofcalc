@@ -49,19 +49,11 @@ def get_formula(autodetect=True, key=1):
     #formula_option = st.radio("",
     #        ["Search PubChem for compound","Enter chemical formula"], key=key)
     #if formula_option == "Enter chemical formula":
-    col1, col2 = st.beta_columns([3,1])
-    with col2:
-        search_mode = st.selectbox("Search by:",
-                    ["Name","SMILES"], key=key)
-    with col1:
-        if search_mode == "Name":
-            user_input = st.text_input("Enter chemical formula or compound name",
+
+    user_input = st.text_input("Enter chemical formula, name or SMILES",
                     value='', max_chars=None,
                     key=key, type='default')
-        elif search_mode == "SMILES":
-            user_input = st.text_input("Enter chemical formula or compound SMILES",
-                    value='', max_chars=None,
-                    key=key, type='default')
+    search_mode = "name"
     if user_input != "":
         if "<" in user_input:
             user_input = user_input.split("</font>")[0]
@@ -135,20 +127,7 @@ st.sidebar.title("Options")
 
 with st.sidebar:
     option = st.radio("Select function",
-                ["Volume estimation","Examples","Display Hofmann volumes"])
-    for i in range(6):
-        st.write("")
-    with st.beta_expander(label="References", expanded=False):
-        st.write("Hofmann, D.W.M. (2002), Fast estimation of crystal densities.\
-            Acta Cryst. B, 58: 489-493. \
-            https://doi.org/10.1107/S0108768101021814")
-        st.write("")
-        st.write("")
-        st.write("PubChem: https://pubchem.ncbi.nlm.nih.gov/")
-        st.write("")
-        st.write("")
-        st.write("WebApp designed by Mark Spillman")
-        st.write("https://github.com/mspillman/hofcalc")
+                ["Volume estimation","Instructions and references","Hofmann volumes (298 K)"])
 
 if option == "Volume estimation":
     mfs = []
@@ -215,8 +194,8 @@ if option == "Volume estimation":
                                         unit_cell_volume / total_hofmann, 3)))
             #with col2:
             #    st.write("Unit cell ÷ 18Å =", str(round(unit_cell_volume / total_18, 2)))
-elif option == "Examples":
-    with st.beta_expander(label="Example inputs", expanded=True):
+elif option == "Instructions and references":
+    with st.beta_expander(label="Example inputs", expanded=False):
         """
         There are a number of acceptable inputs that can be used to estimate
         crystallographic volumes using Hofcalc.
@@ -255,7 +234,7 @@ elif option == "Examples":
         st.table(df)
     for i in range(3):
         st.write("")
-    with st.beta_expander(label="Temperature", expanded=True):
+    with st.beta_expander(label="Temperature", expanded=False):
         """
         The temperature (in kelvin) can be entered, which will automatically be
         applied to the volume calculation using the follwing equation:
@@ -267,7 +246,7 @@ elif option == "Examples":
         st.latex("\\alpha = 0.95 \\times 10^{-4}")
     for i in range(3):
         st.write("")
-    with st.beta_expander(label="Unit Cell", expanded=True):
+    with st.beta_expander(label="Unit Cell", expanded=False):
         """
         If the volume of a unit cell is supplied, then in addition to displaying
         the estimated volume, the cell volume divided by the estimated molecular
@@ -278,6 +257,19 @@ elif option == "Examples":
         df = pd.DataFrame(search_terms, columns=["Search term",
                     "Unit Cell Volume", "Hofmann Volume", "Vcell / VHofmann"])
         st.table(df)
+    for i in range(3):
+        st.write("")
+    with st.beta_expander(label="References", expanded=False):
+        st.write("Hofmann, D.W.M. (2002), Fast estimation of crystal densities.\
+            Acta Cryst. B, 58: 489-493. \
+            https://doi.org/10.1107/S0108768101021814")
+        st.write("")
+        st.write("")
+        st.write("PubChem https://pubchem.ncbi.nlm.nih.gov/")
+        st.write("")
+        st.write("")
+        st.write("Designed by Mark Spillman \
+                https://github.com/mspillman/hofcalc")
 else:
     st.write("Average crystallographic volumes at 298 K reported by Hofmann \
             (see references)")
