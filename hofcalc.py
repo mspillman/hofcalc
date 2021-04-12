@@ -97,10 +97,26 @@ def get_formula(autodetect=True, key=1):
                         f = Formula(molecule.molecular_formula)
                         mf = f.atom_stoich
                     except:
-                        st.write("Error")
-                        st.write("Unable to parse",component,"as a chemical formula \
-                        or find it on PubChem when searching by",search_mode+".")
-                        return None
+                        other_modes = ["name", "smiles", "inchi"]
+                        other_modes.remove(search_mode.lower())
+                        result = False
+                        for om in other_modes:
+                            try:
+                                molecule = pcp.get_compounds(component, om)[0]
+                                f = Formula(molecule.molecular_formula)
+                                mf = f.atom_stoich
+                                result = True
+                                break
+                            except:
+                                pass
+                        if not result:
+                            st.write("Error")
+                            st.write("Unable to parse",component,"as a chemical \
+                                formula or find it on PubChem when searching by",
+                                search_mode+".")
+                            st.write("Subsequent searches by name and SMILES \
+                                also failed.")
+                            return None
                 molecular_formulae.append(mf)
         molecular_formula = defaultdict(int)
         for mf in molecular_formulae:
