@@ -1,28 +1,29 @@
 import streamlit as st
 import pubchempy as pcp
-import numpy as np
+import math
 import pandas as pd
 from pyvalem.formula import Formula
 from collections import defaultdict
 
-volumes = {"H" : 5.08, "He" : np.nan, "Li" : 22.6, "Be" : 36., "B" : 13.24,
-    "C" : 13.87, "N" : 11.8, "O" : 11.39, "F" : 11.17, "Ne" : np.nan,
+volumes = {"H" : 5.08, "He" : math.nan, "Li" : 22.6, "Be" : 36., "B" : 13.24,
+    "C" : 13.87, "N" : 11.8, "O" : 11.39, "F" : 11.17, "Ne" : math.nan,
     "Na" : 26.0, "Mg" : 36., "Al" : 39.6, "Si" : 37.3, "P" : 29.5, "S" : 25.2,
-    "Cl" : 25.8, "Ar" : np.nan, "K" : 36., "Ca" : 45., "Sc" : 42., "Ti" : 27.3,
-    "V" : 24., "Cr" : 28.1, "Mn" : 31.9, "Fe" : 30.4, "Co" : 29.4, "Ni" : 26.,
-    "Cu" : 26.9, "Zn" : 39., "Ga" : 37.8, "Ge" : 41.6, "As" : 36.4,
-    "Se" : 30.3, "Br" : 32.7, "Kr" : np.nan, "Rb" : 42., "Sr" : 47., "Y" : 44.,
-    "Zr" : 27., "Nb" : 37., "Mo" : 38., "Tc" : 38, "Ru" : 37.3, "Rh" : 31.2,
-    "Pd" : 35., "Ag" : 35., "Cd" : 51., "In" : 55, "Sn" : 52.8, "Sb" : 48.,
-    "Te" : 46.7, "I" : 46.2, "Xe" : 45., "Cs" : 46., "Ba" : 66, "La" : 58.,
-    "Ce" : 54., "Pr" : 57., "Nd" : 50., "Pm" : np.nan, "Sm" : 50., "Eu" : 53.,
-    "Gd" : 56., "Tb" : 45., "Dy" : 50., "Ho" : 42., "Er" : 54., "Tm" : 49.,
-    "Yb" : 59., "Lu" : 35., "Hf" : 40., "Ta" : 43., "W" : 38.8, "Re" : 42.7,
-    "Os" : 41.9, "Ir" : 34.3, "Pt" : 38., "Au" : 43., "Hg" : 38., "Tl" : 54.,
-    "Pb" : 52., "Bi" : 60., "Po" : np.nan, "At" : np.nan, "Rn" : np.nan,
-    "Fr" : np.nan, "Ra" : np.nan, "Ac" : 74., "Th" : 56., "Pa" : 60., "U" : 58.,
-    "Np" : 45., "Pu" : np.nan, "Am" : 17., "Cm" : np.nan, "Bk" : np.nan,
-    "Cf" : np.nan, "Es" : np.nan, "Fm" : np.nan}
+    "Cl" : 25.8, "Ar" : math.nan, "K" : 36., "Ca" : 45., "Sc" : 42.,
+    "Ti" : 27.3, "V" : 24., "Cr" : 28.1, "Mn" : 31.9, "Fe" : 30.4, "Co" : 29.4,
+    "Ni" : 26., "Cu" : 26.9, "Zn" : 39., "Ga" : 37.8, "Ge" : 41.6, "As" : 36.4,
+    "Se" : 30.3, "Br" : 32.7, "Kr" : math.nan, "Rb" : 42., "Sr" : 47.,
+    "Y" : 44., "Zr" : 27., "Nb" : 37., "Mo" : 38., "Tc" : 38, "Ru" : 37.3,
+    "Rh" : 31.2, "Pd" : 35., "Ag" : 35., "Cd" : 51., "In" : 55, "Sn" : 52.8,
+    "Sb" : 48., "Te" : 46.7, "I" : 46.2, "Xe" : 45., "Cs" : 46., "Ba" : 66,
+    "La" : 58.,    "Ce" : 54., "Pr" : 57., "Nd" : 50., "Pm" : math.nan,
+    "Sm" : 50., "Eu" : 53., "Gd" : 56., "Tb" : 45., "Dy" : 50., "Ho" : 42.,
+    "Er" : 54., "Tm" : 49., "Yb" : 59., "Lu" : 35., "Hf" : 40., "Ta" : 43.,
+    "W" : 38.8, "Re" : 42.7, "Os" : 41.9, "Ir" : 34.3, "Pt" : 38., "Au" : 43.,
+    "Hg" : 38., "Tl" : 54., "Pb" : 52., "Bi" : 60., "Po" : math.nan,
+    "At" : math.nan, "Rn" : math.nan, "Fr" : math.nan, "Ra" : math.nan,
+    "Ac" : 74., "Th" : 56., "Pa" : 60., "U" : 58., "Np" : 45., "Pu" : math.nan,
+    "Am" : 17., "Cm" : math.nan, "Bk" : math.nan, "Cf" : math.nan,
+    "Es" : math.nan, "Fm" : math.nan}
 
 def get_volume(formula, volumes=volumes, temperature=298):
     volume = 0
@@ -35,14 +36,14 @@ def get_volume(formula, volumes=volumes, temperature=298):
         else:
             if element != "H":
                 eighteen_angstrom_volume += 18*formula[element]
-            if volumes[element] is not np.nan:
+            if volumes[element] is not math.nan:
                 volume += (volumes[element] *
                                 formula[element])*(1+alpha*(temperature - 298))
             else:
                 st.write("Element", element, "does not have a Hofmann volume")
                 st.write("Using the 18-angstrom rule to estimate missing volume")
                 volume += 18 * formula[element]
-    return np.around(volume, 1), eighteen_angstrom_volume
+    return round(volume, 1), eighteen_angstrom_volume
 
 def get_formula(autodetect=True, key=1):
     #formula_option = st.radio("",
@@ -180,9 +181,9 @@ if option == "Volume estimation":
             st.markdown("Total 18 ångström rule = "+str(total_18)+" $Å^3$")
         if unit_cell_volume != 0:
             with col1:
-                st.write("Unit cell ÷ Hofmann =", str(np.around(unit_cell_volume / total_hofmann, 2)))
+                st.write("Unit cell ÷ Hofmann =", str(round(unit_cell_volume / total_hofmann, 2)))
             with col2:
-                st.write("Unit cell ÷ 18Å =", str(np.around(unit_cell_volume / total_18, 2)))
+                st.write("Unit cell ÷ 18Å =", str(round(unit_cell_volume / total_18, 2)))
 
 else:
     st.write("Average crystallographic volumes reported by Hofmann at 298 K \
