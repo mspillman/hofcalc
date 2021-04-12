@@ -106,7 +106,7 @@ elif option == "Instructions and References":
         The simplest option is to enter the chemical formula or name of the
         material of interest. Names are resolved by querying PubChem.
         """
-        search_terms = [["CH3CH2OH", "Formula", "69.61"],
+        search_terms = [["CH3CH2OH", "formula", "69.61"],
                         ["ethanol", "name", "69.61"]]
         df = pd.DataFrame(search_terms, columns=["Search term","Type","Volume"])
         st.table(df)
