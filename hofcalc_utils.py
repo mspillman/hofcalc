@@ -26,6 +26,16 @@ volumes = {
     "Es" : math.nan, "Fm" : math.nan
     }
 
+def get_density(formula, temperature=298):
+    mass = 0
+    for element in formula.keys():
+        mass += Formula(element).rmm * formula[element]
+    mass *= 1.66054e-24
+    volume = get_volume(formula, temperature=temperature)
+    volume *= (1e-8)**3
+    return round(mass / volume, 2)
+
+
 def get_volume(formula, volumes=volumes, temperature=298):
     volume = 0.0
     alpha = 0.95e-4

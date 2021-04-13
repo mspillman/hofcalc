@@ -47,7 +47,7 @@ if option == "Volume Estimation":
                                             molecular_formula["individual"][mf],
                                             temperature=temperature)
                 for mf, volume in zip(molecular_formula["individual"],
-                                    individual_volumes):
+                                    individual_volumes.values()):
                     with col1:
                         st.write(mf)
                     with col2:
@@ -57,33 +57,39 @@ if option == "Volume Estimation":
                             mf_string += key + str(val) + " "
                         st.write(mf_string)
                     with col3:
-                        st.write(volume)
+                        st.write(str(volume))
             for i in range(3):
                 st.write("")
             molecular_formula["individual_volumes"] = individual_volumes
         total_volume = hu.get_volume(molecular_formula["combined"],
                                         temperature=temperature)
-        col1, col2, col3 = st.beta_columns(3)
+
+        col1, col2, col3, col4 = st.beta_columns(4)
         with col1:
-            st.write("Total Volume:")
-            st.markdown(str(round(total_volume, 3))+" $Å^3$")
-        with col2:
             mf = molecular_formula["combined"]
             mf_string = ""
             for key, val in mf.items():
                 mf_string += key + str(val) + " "
             st.write("Total atoms:")
             st.write(mf_string)
+        with col2:
+            st.write("Estimated Volume:")
+            st.markdown(str(round(total_volume, 3))+" $Å^3$")
+        with col3:
+            density = hu.get_density(molecular_formula["combined"], temperature)
+            st.write("Estimated Density:")
+            st.write(str(density),"$g$ $cm^{-3}$")
         if unit_cell_volume != 0:
-            with col3:
-                st.write("$$\\frac{V_{Cell}}{V_{Hofmann}}$$", "=",
-                            str(round(unit_cell_volume / total_volume, 2)))
+            with col4:
+                st.write("$$\\frac{V_{Cell}}{V_{Hofmann}}$$:")
+                st.write(str(round(unit_cell_volume / total_volume, 2)))
                 molecular_formula["V_Cell / V_Hofmann"] = round(
                                         unit_cell_volume / total_volume, 2)
         for i in range(2):
             st.write("")
-        molecular_formula["total_volume"] = total_volume
-        molecular_formula["temperature"] = temperature
+        molecular_formula["Estimated Volume"] = total_volume
+        molecular_formula["Estimated Density"] = density
+        molecular_formula["Temperature"] = temperature
 
         name = " ".join([x.strip() for x in molecular_formula["user_input"]])
         name = name.replace(" ","_")
