@@ -1,5 +1,4 @@
 import streamlit as st
-import math
 import pandas as pd
 import hofcalc_utils as hu
 import json
@@ -8,8 +7,6 @@ import base64
 st.set_page_config(page_title='HofCalc WebApp', page_icon = None,
                     layout = 'centered', initial_sidebar_state = 'auto')
 
-
-# Top section
 st.title("HofCalc")
 st.markdown("*Crystallographic Volume Estimation*")
 st.sidebar.title("Options")
@@ -47,8 +44,8 @@ if option == "Volume Estimation":
                     st.markdown("***Volume***")
                 for mf in molecular_formula["individual"].keys():
                     individual_volumes[mf] = hu.get_volume(
-                                                molecular_formula["individual"][mf],
-                                                temperature=temperature)
+                                            molecular_formula["individual"][mf],
+                                            temperature=temperature)
                 for mf, volume in zip(molecular_formula["individual"],
                                     individual_volumes):
                     with col1:
@@ -92,16 +89,6 @@ if option == "Volume Estimation":
         name = name.replace(" ","_")
         name += "_"+str(round(temperature, 2))+"K_HofCalc.json"
         formula_json = json.dumps(molecular_formula, indent=4)
-        ## Uncomment to remove the quotations around any URLs that are present
-        ## in the output file. Result will not strictly a valid JSON any more
-        #lines = []
-        #for line in formula_json.split("\n"):
-        #    if "https" in line:
-        #        line = line.split(":")
-        #        url = ":".join([x.replace("\"", "") for x in line[1:]])
-        #        line = ": ".join([line[0], url])
-        #    lines.append(line)
-        #formula_json = "\n".join(lines)
         b64 = base64.b64encode(formula_json.encode()).decode()
         href = f'<a href="data:file/zip;base64,{b64}" download=\'{name}\'>\
                 Download summary</a>'
@@ -113,7 +100,7 @@ elif option == "Instructions and References":
     with st.beta_expander(label="Example inputs", expanded=False):
         """
         There are a number of acceptable inputs that can be used to estimate
-        crystallographic volumes using Hofcalc.
+        crystallographic volumes using HofCalc.
 
         The simplest option is to enter the chemical formula or name of the
         material of interest. Names are resolved by querying PubChem.
@@ -146,6 +133,7 @@ elif option == "Instructions and References":
         Where
         """
         st.latex("\\alpha = 0.95 \\times 10^{-4}")
+
     for i in range(3):
         st.write("")
     with st.beta_expander(label="Unit Cell", expanded=False):
@@ -158,13 +146,14 @@ elif option == "Instructions and References":
         df = pd.DataFrame(search_terms, columns=["Search term",
                     "Unit Cell Volume", "Hofmann Volume", "Vcell / VHofmann"])
         st.table(df)
+
     for i in range(3):
         st.write("")
     with st.beta_expander(label="References", expanded=False):
         col1, col2 = st.beta_columns([3,2])
         with col1:
             st.write("Hofmann, D.W.M. (2002), Fast estimation of crystal \
-                densities. Acta Cryst. B, 58: 489-493.")
+                    densities. Acta Cryst. B, 58: 489-493.")
         with col2:
             st.write("https://doi.org/10.1107/S0108768101021814")
         st.write("")
@@ -179,6 +168,7 @@ elif option == "Instructions and References":
             st.write("WebApp designed by Mark Spillman")
         with col2:
             st.write("https://github.com/mspillman/hofcalc")
+
 else:
     st.write("Average crystallographic volumes at 298 K reported by Hofmann \
             (see references)")

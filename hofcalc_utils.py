@@ -4,7 +4,8 @@ from collections import defaultdict
 import pubchempy as pcp
 import math
 
-volumes = {"H" : 5.08, "He" : math.nan, "Li" : 22.6, "Be" : 36., "B" : 13.24,
+volumes = {
+    "H" : 5.08, "He" : math.nan, "Li" : 22.6, "Be" : 36., "B" : 13.24,
     "C" : 13.87, "N" : 11.8, "O" : 11.39, "F" : 11.17, "Ne" : math.nan,
     "Na" : 26.0, "Mg" : 36., "Al" : 39.6, "Si" : 37.3, "P" : 29.5, "S" : 25.2,
     "Cl" : 25.8, "Ar" : math.nan, "K" : 36., "Ca" : 45., "Sc" : 42.,
@@ -22,7 +23,8 @@ volumes = {"H" : 5.08, "He" : math.nan, "Li" : 22.6, "Be" : 36., "B" : 13.24,
     "At" : math.nan, "Rn" : math.nan, "Fr" : math.nan, "Ra" : math.nan,
     "Ac" : 74., "Th" : 56., "Pa" : 60., "U" : 58., "Np" : 45., "Pu" : math.nan,
     "Am" : 17., "Cm" : math.nan, "Bk" : math.nan, "Cf" : math.nan,
-    "Es" : math.nan, "Fm" : math.nan}
+    "Es" : math.nan, "Fm" : math.nan
+    }
 
 def get_volume(formula, volumes=volumes, temperature=298):
     volume = 0.0
@@ -31,24 +33,23 @@ def get_volume(formula, volumes=volumes, temperature=298):
     for element in formula.keys():
         if element not in volumes:
             st.write("Element",element,"not recognized.")
-            return None, None
+            return None
         else:
             if element != "H":
                 eighteen_angstrom_volume += 18*formula[element]
             if volumes[element] is not math.nan:
                 volume += (volumes[element] *
-                                formula[element])*(1.+alpha*(temperature - 298.))
+                            formula[element])*(1.+alpha*(temperature - 298.))
             else:
                 st.write("Element", element, "does not have a Hofmann volume")
-                st.write("Using the 18-angstrom rule to estimate missing volume")
-                volume += 18 * formula[element]
+                st.write("Using the 18A rule to estimate missing volume")
+                volume += 18. * formula[element]
     return round(volume, 2)
 
-def get_formula(autodetect=True, key=1):
+def get_formula():
     user_input = st.text_input("Enter chemical formula or name. Multiple \
                     entries should be separated by commas.",
-                    value='', max_chars=None,
-                    key=key, type='default')
+                    value='', max_chars=None, key=None, type='default')
     if user_input != "":
         cids = {}
         cid_links = {}
@@ -57,8 +58,7 @@ def get_formula(autodetect=True, key=1):
             user_input = user_input.split("</font>")[0]
             user_input = user_input.split("<b>")[1]
             user_input = user_input.split(">")[1:]
-            user_input = ("".join(
-                                user_input)).replace("<sub","").replace(
+            user_input = ("".join(user_input)).replace("<sub","").replace(
                                                     "</sub","").replace(" ","")
             st.write("Interpreting formula as", user_input)
         molecular_formulae = {}
@@ -76,7 +76,7 @@ def get_formula(autodetect=True, key=1):
                 except:
                     try:
                         molecule = pcp.get_compounds(component, "name")[0]
-                        cids[component] =molecule.cid
+                        cids[component] = molecule.cid
                         base_url = "https://pubchem.ncbi.nlm.nih.gov/compound/"
                         cid_links[component] = base_url+str(molecule.cid)
                         f = Formula(molecule.molecular_formula)
