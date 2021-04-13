@@ -62,7 +62,7 @@ def get_formula():
                                                     "</sub","").replace(" ","")
             st.write("Interpreting formula as", user_input)
         molecular_formulae = {}
-        if "," in user_input:
+        if ";" in user_input:
             components = user_input.split(";")
             components = [x.strip() for x in components]
         else:
