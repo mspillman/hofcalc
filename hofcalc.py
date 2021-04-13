@@ -37,7 +37,7 @@ if option == "Volume Estimation":
         st.markdown("**Results**")
         if len(molecular_formula["individual"].keys()) > 1:
             with st.beta_expander(label="Individual", expanded=False):
-                individual_volumes = []
+                individual_volumes = {}
                 col1, col2, col3 = st.beta_columns(3)
                 with col1:
                     st.markdown("***Input***")
@@ -46,9 +46,9 @@ if option == "Volume Estimation":
                 with col3:
                     st.markdown("***Volume***")
                 for mf in molecular_formula["individual"].keys():
-                    individual_volumes.append(hu.get_volume(
+                    individual_volumes[mf] = hu.get_volume(
                                                 molecular_formula["individual"][mf],
-                                                temperature=temperature))
+                                                temperature=temperature)
                 for mf, volume in zip(molecular_formula["individual"],
                                     individual_volumes):
                     with col1:
