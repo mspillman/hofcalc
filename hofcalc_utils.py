@@ -48,7 +48,7 @@ def get_volume(formula, volumes=volumes, temperature=298):
 
 def get_formula():
     user_input = st.text_input("Enter chemical formula or name. Multiple \
-                    entries should be separated by commas.",
+                    entries should be separated by semicolons.",
                     value='', max_chars=None, key=None, type='default')
     if user_input != "":
         cids = {}
@@ -63,7 +63,7 @@ def get_formula():
             st.write("Interpreting formula as", user_input)
         molecular_formulae = {}
         if "," in user_input:
-            components = user_input.split(",")
+            components = user_input.split(";")
             components = [x.strip() for x in components]
         else:
             components = [user_input.strip()]

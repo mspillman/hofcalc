@@ -104,25 +104,27 @@ elif option == "Instructions and References":
 
         The simplest option is to enter the chemical formula or name of the
         material of interest. Names are resolved by querying PubChem.
+        Formulae can be prefixed with a multiple, e.g. 2H2O, and pipe symbols
+        included when copy/pasting from Mercury are automatically removed.
         """
         search_terms = [["CH3CH2OH", "formula", "69.61"],
-                        ["ethanol", "name", "69.61"]]
+                        ["ethanol", "name", "69.61"],
+                        ["water", "21.55"],
+                        ["2H2O", "43.10"]]
         df = pd.DataFrame(search_terms, columns=["Search term","Type","Volume"])
         st.table(df)
         st.write("")
         """
-        Formulae can be prefixed with a multiple, e.g. 2H2O
-
         It is also possible to search for multiple items of any type at
-        the same time by separating individual components with a comma. This
+        the same time by separating individual components with a semicolon. This
         means that for example, 'amodiaquine dihydrochloride dihydrate' can also
-        be entered as 'amodiaquine, 2HCl, 2H2O'.
+        be entered as 'amodiaquine; 2HCl; 2H2O'.
         """
-        search_terms = [["carbamazepine, L-glutamic acid", "497.98"],
-                        ["zopiclone, 2H2O", "496.02"],
-                        ["C15H12N2O, CH3CH2COO-, Na+", "419.79"],
-                        ["sodium salicylate, water", "204.21"],
-                        ["amodiaquine, 2HCl, 2H2O", "566.61"]]
+        search_terms = [["carbamazepine; L-glutamic acid", "497.98"],
+                        ["zopiclone; 2H2O", "496.02"],
+                        ["C15H12N2O; CH3CH2COO-; Na+", "419.79"],
+                        ["sodium salicylate; water", "204.21"],
+                        ["amodiaquine; 2HCl; 2H2O", "566.61"]]
         df = pd.DataFrame(search_terms, columns=["Search term", "Total Volume"])
         st.table(df)
 
