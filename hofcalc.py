@@ -114,12 +114,15 @@ elif option == "Instructions and References":
         Formulae can be prefixed with a multiple, e.g. 2H2O
 
         It is also possible to search for multiple items of any type at
-        the same time by separating individual components with a comma e.g.
+        the same time by separating individual components with a comma. This
+        means that for example, 'amodiaquine dihydrochloride dihydrate' can also
+        be entered as 'amodiaquine, 2HCl, 2H2O'.
         """
         search_terms = [["carbamazepine, L-glutamic acid", "497.98"],
                         ["zopiclone, 2H2O", "496.02"],
                         ["C15H12N2O, CH3CH2COO-, Na+", "419.79"],
-                        ["sodium salicylate, water", "204.21"]]
+                        ["sodium salicylate, water", "204.21"],
+                        ["amodiaquine, 2HCl, 2H2O", "566.61"]]
         df = pd.DataFrame(search_terms, columns=["Search term", "Total Volume"])
         st.table(df)
 
