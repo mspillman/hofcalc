@@ -51,6 +51,7 @@ def get_formula(autodetect=True, key=1):
                     key=key, type='default')
     if user_input != "":
         cids = {}
+        cid_links = {}
         # Remove html tags produced by MarvinSketch
         if "<" in user_input:
             user_input = user_input.split("</font>")[0]
@@ -76,6 +77,8 @@ def get_formula(autodetect=True, key=1):
                     try:
                         molecule = pcp.get_compounds(component, "name")[0]
                         cids[component] =molecule.cid
+                        base_url = "https://pubchem.ncbi.nlm.nih.gov/compound/"
+                        cid_links[component] = base_url+str(molecule.cid)
                         f = Formula(molecule.molecular_formula)
                         mf = f.atom_stoich
                     except:
@@ -93,7 +96,8 @@ def get_formula(autodetect=True, key=1):
         molecular_formula = {"combined" : combined_molecular_formula,
                             "individual" : molecular_formulae,
                             "user_input" : components,
-                            "PubChem CIDs" : cids}
+                            "PubChem CIDs" : cids,
+                            "PubChem URLs" : cid_links}
     else:
         molecular_formula = None
 

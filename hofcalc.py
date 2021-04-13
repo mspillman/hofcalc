@@ -92,6 +92,16 @@ if option == "Volume Estimation":
         name = name.replace(" ","_")
         name += "_"+str(round(temperature, 2))+"K_HofCalc.json"
         formula_json = json.dumps(molecular_formula, indent=4)
+        ## Uncomment to remove the quotations around any URLs that are present
+        ## in the output file. Result will not strictly a valid JSON any more
+        #lines = []
+        #for line in formula_json.split("\n"):
+        #    if "https" in line:
+        #        line = line.split(":")
+        #        url = ":".join([x.replace("\"", "") for x in line[1:]])
+        #        line = ": ".join([line[0], url])
+        #    lines.append(line)
+        #formula_json = "\n".join(lines)
         b64 = base64.b64encode(formula_json.encode()).decode()
         href = f'<a href="data:file/zip;base64,{b64}" download=\'{name}\'>\
                 Download summary</a>'
