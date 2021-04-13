@@ -49,8 +49,8 @@ def get_formula(autodetect=True, key=1):
                     entries should be separated by commas.",
                     value='', max_chars=None,
                     key=key, type='default')
-    search_mode = "name"
     if user_input != "":
+        cids = {}
         # Remove html tags produced by MarvinSketch
         if "<" in user_input:
             user_input = user_input.split("</font>")[0]
@@ -65,7 +65,7 @@ def get_formula(autodetect=True, key=1):
             components = user_input.split(",")
             components = [x.strip() for x in components]
         else:
-            components = [user_input]
+            components = [user_input.strip()]
         for component in components:
             if component != "":
                 try:
@@ -74,7 +74,8 @@ def get_formula(autodetect=True, key=1):
                     mf = f.atom_stoich
                 except:
                     try:
-                        molecule = pcp.get_compounds(component, search_mode.lower())[0]
+                        molecule = pcp.get_compounds(component, "name")[0]
+                        cids[component] =molecule.cid
                         f = Formula(molecule.molecular_formula)
                         mf = f.atom_stoich
                     except:
@@ -84,13 +85,15 @@ def get_formula(autodetect=True, key=1):
                             name.")
                         return None
                 molecular_formulae[component] = mf
+
         combined_molecular_formula = defaultdict(int)
         for component in components:
             for key, value in molecular_formulae[component].items():
                 combined_molecular_formula[key] += value
         molecular_formula = {"combined" : combined_molecular_formula,
                             "individual" : molecular_formulae,
-                            "user_input" : components}
+                            "user_input" : components,
+                            "PubChem CIDs" : cids}
     else:
         molecular_formula = None
 
