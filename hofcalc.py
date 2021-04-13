@@ -88,10 +88,12 @@ if option == "Volume Estimation":
         molecular_formula["total_volume"] = total_volume
         molecular_formula["temperature"] = temperature
 
-
+        name = " ".join([x.strip() for x in molecular_formula["user_input"]])
+        name = name.replace(" ","_")
+        name += "_"+str(round(temperature, 2))+"K_HofCalc.json"
         formula_json = json.dumps(molecular_formula, indent=4)
         b64 = base64.b64encode(formula_json.encode()).decode()
-        href = f'<a href="data:file/zip;base64,{b64}" download=\'{"hofcalc_summary.json"}\'>\
+        href = f'<a href="data:file/zip;base64,{b64}" download=\'{name}\'>\
                 Download summary</a>'
         st.markdown(href, unsafe_allow_html=True)
 
