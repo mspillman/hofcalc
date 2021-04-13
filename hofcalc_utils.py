@@ -30,9 +30,9 @@ def get_density(formula, temperature=298):
     mass = 0
     for element in formula.keys():
         mass += Formula(element).rmm * formula[element]
-    mass *= 1.66054e-24
+    mass *= 1.66054e-24 # convert mass to grams
     volume = get_volume(formula, temperature=temperature)
-    volume *= (1e-8)**3
+    volume *= (1e-8)**3 # convert volume to cm^3
     return round(mass / volume, 2)
 
 
