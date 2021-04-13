@@ -130,14 +130,15 @@ elif option == "Instructions and References":
         st.write("")
     with st.beta_expander(label="Temperature", expanded=False):
         """
-        The temperature (in kelvin) is automatically applied to the volume
-        calculation using the following equation:
+        The temperature, $T$ (in kelvin) is automatically included in the volume
+        calculation via the following equation:
         """
         st.latex("V = \\sum{n_{i}v_{i}(1 +  \\alpha(T - 298))}")
         """
-        Where
+        Where $n_{i}$ and $v_{i}$ are the number and Hofmann volume of the $i$th
+        element in the chemical formula, and where
         """
-        st.latex("\\alpha = 0.95 \\times 10^{-4}")
+        st.latex("\\alpha = 0.95 \\times 10^{-4} K^{-1}")
 
     for i in range(3):
         st.write("")
