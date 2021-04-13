@@ -100,8 +100,6 @@ if option == "Volume Estimation":
                 Download summary</a>'
         st.markdown(href, unsafe_allow_html=True)
 
-
-
 elif option == "Instructions and References":
     with st.beta_expander(label="Example inputs", expanded=False):
         """

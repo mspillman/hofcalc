@@ -3,28 +3,8 @@ from pyvalem.formula import Formula
 from collections import defaultdict
 import pubchempy as pcp
 import math
+import json
 
-volumes = {
-    "H" : 5.08, "He" : math.nan, "Li" : 22.6, "Be" : 36., "B" : 13.24,
-    "C" : 13.87, "N" : 11.8, "O" : 11.39, "F" : 11.17, "Ne" : math.nan,
-    "Na" : 26.0, "Mg" : 36., "Al" : 39.6, "Si" : 37.3, "P" : 29.5, "S" : 25.2,
-    "Cl" : 25.8, "Ar" : math.nan, "K" : 36., "Ca" : 45., "Sc" : 42.,
-    "Ti" : 27.3, "V" : 24., "Cr" : 28.1, "Mn" : 31.9, "Fe" : 30.4, "Co" : 29.4,
-    "Ni" : 26., "Cu" : 26.9, "Zn" : 39., "Ga" : 37.8, "Ge" : 41.6, "As" : 36.4,
-    "Se" : 30.3, "Br" : 32.7, "Kr" : math.nan, "Rb" : 42., "Sr" : 47.,
-    "Y" : 44., "Zr" : 27., "Nb" : 37., "Mo" : 38., "Tc" : 38, "Ru" : 37.3,
-    "Rh" : 31.2, "Pd" : 35., "Ag" : 35., "Cd" : 51., "In" : 55, "Sn" : 52.8,
-    "Sb" : 48., "Te" : 46.7, "I" : 46.2, "Xe" : 45., "Cs" : 46., "Ba" : 66,
-    "La" : 58.,    "Ce" : 54., "Pr" : 57., "Nd" : 50., "Pm" : math.nan,
-    "Sm" : 50., "Eu" : 53., "Gd" : 56., "Tb" : 45., "Dy" : 50., "Ho" : 42.,
-    "Er" : 54., "Tm" : 49., "Yb" : 59., "Lu" : 35., "Hf" : 40., "Ta" : 43.,
-    "W" : 38.8, "Re" : 42.7, "Os" : 41.9, "Ir" : 34.3, "Pt" : 38., "Au" : 43.,
-    "Hg" : 38., "Tl" : 54., "Pb" : 52., "Bi" : 60., "Po" : math.nan,
-    "At" : math.nan, "Rn" : math.nan, "Fr" : math.nan, "Ra" : math.nan,
-    "Ac" : 74., "Th" : 56., "Pa" : 60., "U" : 58., "Np" : 45., "Pu" : math.nan,
-    "Am" : 17., "Cm" : math.nan, "Bk" : math.nan, "Cf" : math.nan,
-    "Es" : math.nan, "Fm" : math.nan
-    }
 
 def get_density(formula, temperature=298):
     mass = 0
@@ -35,11 +15,12 @@ def get_density(formula, temperature=298):
     volume *= (1e-8)**3 # convert volume to cm^3
     return round(mass / volume, 2)
 
-
-def get_volume(formula, volumes=volumes, temperature=298):
+def get_volume(formula, temperature=298):
     volume = 0.0
     alpha = 0.95e-4
     eighteen_angstrom_volume = 0
+    with open("volumes.json", "r") as f:
+        volumes = json.load(f)
     for element in formula.keys():
         if element not in volumes:
             st.write("Element",element,"not recognized.")
