@@ -111,6 +111,8 @@ elif option == "Instructions and References":
         st.table(df)
         st.write("")
         """
+        Formulae can be prefixed with a multiple, e.g. 2H2O
+
         It is also possible to search for multiple items of any type at
         the same time by separating individual components with a comma e.g.
         """
