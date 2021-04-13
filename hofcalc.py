@@ -109,8 +109,8 @@ elif option == "Instructions and References":
         """
         search_terms = [["CH3CH2OH", "formula", "69.61"],
                         ["ethanol", "name", "69.61"],
-                        ["water", "21.55"],
-                        ["2H2O", "43.10"]]
+                        ["water", "name", "21.55"],
+                        ["2H2O", "formula", "43.10"]]
         df = pd.DataFrame(search_terms, columns=["Search term","Type","Volume"])
         st.table(df)
         st.write("")
