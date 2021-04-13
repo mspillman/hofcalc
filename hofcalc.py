@@ -185,9 +185,7 @@ else:
     st.write("Average crystallographic volumes at 298 K reported by Hofmann \
             (see references)")
     st.write("All volumes are in cubic ångströms")
-    with open("volumes.json", "r") as f:
-        volumes = json.load(f)
-    volume_df = pd.DataFrame.from_dict(volumes, columns=["Volume"],
+    volume_df = pd.DataFrame.from_dict(hu.volumes, columns=["Volume"],
                                         orient="index", dtype=float)
     st.table(volume_df.style.format('{:.2f}'))
 

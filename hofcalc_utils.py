@@ -5,6 +5,9 @@ import pubchempy as pcp
 import math
 import json
 
+with open("volumes.json", "r") as f:
+    volumes = json.load(f)
+f.close()
 
 def get_density(formula, temperature=298):
     mass = 0
@@ -19,8 +22,6 @@ def get_volume(formula, temperature=298):
     volume = 0.0
     alpha = 0.95e-4
     eighteen_angstrom_volume = 0
-    with open("volumes.json", "r") as f:
-        volumes = json.load(f)
     for element in formula.keys():
         if element not in volumes:
             st.write("Element",element,"not recognized.")
@@ -64,6 +65,12 @@ def get_formula():
                     component = component.replace("|", "")
                     f = Formula(component)
                     mf = f.atom_stoich
+                    # Use this to trip up deuterium, tritium issues when
+                    # searching for common abbreviations e.g. THC, CBD, which
+                    # could be interpreted as chemical formulae, but don't have
+                    # corresponding Hofmann tabulated values (identical to H)
+                    for element in mf.keys():
+                        _ = volumes[element]
                 except:
                     try:
                         molecule = pcp.get_compounds(component, "name")[0]
