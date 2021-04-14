@@ -23,7 +23,8 @@ if option == "Volume Estimation":
         temperature = st.number_input("Temperature / K",
                                 min_value=0, max_value=None, value=298, step=10)
     with col2:
-        unit_cell_volume = st.number_input("Unit cell volume (optional)",
+        unit_cell_volume = st.number_input(
+                                "Unit cell volume in cubic ångströms (optional)",
                                 min_value=0.0, max_value=None, value=0.0,
                                 step=100.0)
     molecular_formula = hu.get_formula()
@@ -73,11 +74,11 @@ if option == "Volume Estimation":
             st.write("Total atoms:")
             st.write(mf_string)
         with col2:
-            st.write("Estimated Volume:")
+            st.write("Hofmann Volume:")
             st.markdown(str(round(total_volume, 3))+" $Å^3$")
         with col3:
             density = hu.get_density(molecular_formula["combined"], temperature)
-            st.write("Estimated Density:")
+            st.write("Hofmann Density:")
             st.write(str(density),"$g$ $cm^{-3}$")
         if unit_cell_volume != 0:
             with col4:
@@ -87,9 +88,10 @@ if option == "Volume Estimation":
                                         unit_cell_volume / total_volume, 2)
         for i in range(2):
             st.write("")
-        molecular_formula["Estimated Volume"] = total_volume
-        molecular_formula["Estimated Density"] = density
+
         molecular_formula["Temperature"] = temperature
+        molecular_formula["Hofmann Volume"] = total_volume
+        molecular_formula["Hofmann Density"] = density
 
         name = " ".join([x.strip() for x in molecular_formula["user_input"]])
         name = name.replace(" ","_")
@@ -108,8 +110,7 @@ elif option == "Instructions and References":
 
         The simplest option is to enter the chemical formula or name of the
         material of interest. Names are resolved by querying PubChem.
-        Formulae can be prefixed with a multiple, e.g. 2H2O, and pipe symbols
-        included when copy/pasting from Mercury are automatically removed.
+        Note that formulae can be prefixed with a multiple, e.g. 2H2O
         """
         search_terms = [["CH3CH2OH", "formula", "69.61"],
                         ["ethanol", "name", "69.61"],
@@ -119,15 +120,16 @@ elif option == "Instructions and References":
         st.table(df)
         st.write("")
         """
-        It is also possible to search for multiple items of any type at
-        the same time by separating individual components with a semicolon. This
-        means that for example, 'amodiaquine dihydrochloride dihydrate' can also
-        be entered as 'amodiaquine; 2HCl; 2H2O'.
+        It is also possible to search for multiple items simultaneously, and mix
+        and match name and formulae by separating individual components with a
+        semicolon. This means that for example, 'amodiaquine dihydrochloride
+        dihydrate' can also be entered as 'amodiaquine; 2HCl; 2H2O'.
         """
         search_terms = [["carbamazepine; L-glutamic acid", "497.98"],
                         ["zopiclone; 2H2O", "496.02"],
                         ["C15H12N2O; CH3CH2COO-; Na+", "419.79"],
                         ["sodium salicylate; water", "204.21"],
+                        ["amodiaquine dihydrochloride dihydrate", "566.61"],
                         ["amodiaquine; 2HCl; 2H2O", "566.61"]]
         df = pd.DataFrame(search_terms, columns=["Search term", "Total Volume"])
         st.table(df)
