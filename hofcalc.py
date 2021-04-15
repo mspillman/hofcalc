@@ -14,7 +14,7 @@ st.sidebar.title("Options")
 with st.sidebar:
     option = st.radio("", ["Volume Estimation",
                             "Hofmann Volumes (298 K)",
-                            "Instructions and References"])
+                            "Help"])
 
 if option == "Volume Estimation":
     col1, col2 = st.beta_columns(2)
@@ -102,7 +102,7 @@ if option == "Volume Estimation":
                 Download summary</a>'
         st.markdown(href, unsafe_allow_html=True)
 
-elif option == "Instructions and References":
+elif option == "Help":
     with st.beta_expander(label="Example inputs", expanded=False):
         """
         There are a number of acceptable inputs that can be used to estimate
@@ -112,8 +112,8 @@ elif option == "Instructions and References":
         material of interest. Names are resolved by querying PubChem.
         Note that formulae can be prefixed with a multiple, e.g. 2H2O
         """
-        search_terms = [["CH3CH2OH", "formula", "69.61"],
-                        ["ethanol", "name", "69.61"],
+        search_terms = [["ethanol", "name", "69.61"],
+                        ["CH3CH2OH", "formula", "69.61"],
                         ["water", "name", "21.55"],
                         ["2H2O", "formula", "43.10"]]
         df = pd.DataFrame(search_terms, columns=["Search term","Type","Volume"])
