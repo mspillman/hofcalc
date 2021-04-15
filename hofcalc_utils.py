@@ -73,18 +73,40 @@ def get_formula():
                         _ = volumes[element]
                 except:
                     try:
-                        molecule = pcp.get_compounds(component, "name")[0]
-                        cids[component] = molecule.cid
-                        base_url = "https://pubchem.ncbi.nlm.nih.gov/compound/"
-                        cid_links[component] = base_url+str(molecule.cid)
-                        f = Formula(molecule.molecular_formula)
+                        component_no_decimal = component.replace(".","1",1)
+                        i = 0
+                        for c in component_no_decimal:
+                            if c.isdigit():
+                                i+=1
+                            else:
+                                break
+                        multiple = float(component[:i])
+                        actual_formula = component[i:]
+                        f = Formula(actual_formula)
                         mf = f.atom_stoich
+                        # Use this to trip up deuterium, tritium issues when
+                        # searching for common abbreviations e.g. THC, CBD, which
+                        # could be interpreted as chemical formulae, but don't have
+                        # corresponding Hofmann tabulated values (identical to H)
+                        for element in mf.keys():
+                            _ = volumes[element]
+                        for key, value in mf.items():
+                            mf[key] = value * multiple
+
                     except:
-                        st.write("Error")
-                        st.write("Unable to parse",component,"as a chemical \
-                            formula or find it on PubChem when searching by \
-                            name.")
-                        return None
+                        try:
+                            molecule = pcp.get_compounds(component, "name")[0]
+                            cids[component] = molecule.cid
+                            base_url = "https://pubchem.ncbi.nlm.nih.gov/compound/"
+                            cid_links[component] = base_url+str(molecule.cid)
+                            f = Formula(molecule.molecular_formula)
+                            mf = f.atom_stoich
+                        except:
+                            st.write("Error")
+                            st.write("Unable to parse",component,"as a chemical \
+                                formula or find it on PubChem when searching by \
+                                name.")
+                            return None
                 molecular_formulae[component] = mf
 
         combined_molecular_formula = defaultdict(int)
