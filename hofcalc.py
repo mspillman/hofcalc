@@ -17,12 +17,12 @@ with st.sidebar:
                             "Help"])
 
 if option == "Volume Estimation":
-    col1, col2, col3 = st.beta_columns([1,1,1])
+    col1, col2 = st.beta_columns(2)
 
     with col1:
         temperature = st.number_input("Temperature / K",
                                 min_value=0, max_value=None, value=298, step=10)
-    with col3:
+    with col2:
         unit_cell_volume = st.number_input(
                                 "Unit cell volume in cubic ångströms (optional)",
                                 min_value=0.0, max_value=None, value=0.0,
