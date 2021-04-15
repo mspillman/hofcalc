@@ -137,8 +137,8 @@ elif option == "Help":
         Charges could potentially interfere with the parsing of chemical
         formulae. For example, two ways of representing an oxide ion:
         """
-        search_terms = [["O2-", "O x 2"],
-                        ["O-2", "O x 1"]]
+        search_terms = [["O-2", "1 x O"],
+                        ["O2-", "2 x O"]]
         df = pd.DataFrame(search_terms, columns=["Search term", "Evaluated as"])
         st.table(df)
         """
