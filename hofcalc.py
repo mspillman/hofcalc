@@ -17,7 +17,7 @@ with st.sidebar:
                             "Help"])
 
 if option == "Volume Estimation":
-    col1, col2, col3 = st.beta_columns([1,2,1])
+    col1, col2, col3 = st.beta_columns([1,1,1])
 
     with col1:
         temperature = st.number_input("Temperature / K",
