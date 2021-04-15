@@ -133,7 +133,20 @@ elif option == "Help":
                         ["amodiaquine; 2HCl; 2H2O", "566.61"]]
         df = pd.DataFrame(search_terms, columns=["Search term", "Total Volume"])
         st.table(df)
-
+        """
+        Charges could potentially interfere with the parsing of chemical
+        formulae. For example, two ways of representing an oxide ion:
+        """
+        search_terms = [["O2-", "O x 2"],
+                        ["O-2", "O x 1"]]
+        df = pd.DataFrame(search_terms, columns=["Search term", "Evaluated as"])
+        st.table(df)
+        """
+        If including charges in your queries, ensure that the correct number of
+        atoms has been determined in the displayed atom counts or the
+        downloadable summary file. For more information on formatting formulae,
+        see the pyvalem documentation (link in references)
+        """
     for i in range(3):
         st.write("")
     with st.beta_expander(label="Temperature", expanded=False):
@@ -179,7 +192,13 @@ elif option == "Help":
         st.write("")
         st.write("")
         with col1:
-            st.write("WebApp designed by Mark Spillman")
+            st.write("PyValem")
+        with col2:
+            st.write("https://github.com/xnx/pyvalem")
+        st.write("")
+        st.write("")
+        with col1:
+            st.write("HofCalc WebApp")
         with col2:
             st.write("https://github.com/mspillman/hofcalc")
 
