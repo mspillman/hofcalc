@@ -104,6 +104,7 @@ if option == "Volume Estimation":
 
 elif option == "Help":
     with st.beta_expander(label="Example inputs", expanded=False):
+        st.markdown("**Basic**")
         """
         There are a number of acceptable inputs that can be used to estimate
         crystallographic volumes using HofCalc.
@@ -119,6 +120,7 @@ elif option == "Help":
         df = pd.DataFrame(search_terms, columns=["Search term","Type","Volume"])
         st.table(df)
         st.write("")
+        st.markdown("**Multiple search terms**")
         """
         It is also possible to search for multiple items simultaneously, and mix
         and match name and formulae by separating individual components with a
@@ -133,6 +135,29 @@ elif option == "Help":
                         ["amodiaquine; 2HCl; 2H2O", "566.61"]]
         df = pd.DataFrame(search_terms, columns=["Search term", "Total Volume"])
         st.table(df)
+        st.markdown("**More complex examples - hemihydrates**")
+        """
+        In cases where fractional multiples of search components are required,
+        such as with hemihydrates, care should be taken to check the evaluated
+        chemical formula for consistency with the expected formula.
+        """
+        search_terms = [["Calcium sulfate hemihydrate","Ca2 H2 O9 S2","253.07",
+                        "2", "126.53"],
+                        ["calcium; calcium; sulfate; sulfate; water",
+                        "Ca2 O9 S2 H2", "253.07", "2", "126.53"],
+                        ["calcium; sulfate; 0.5H2O", "Ca1 O4.5 S1 H1.0",
+                        "126.53", "-", "126.53"],
+                        ["Codeine phosphate hemihydrate", "C36 H50 N2 O15 P2",
+                        "1006.77", "2", "503.38"],
+                        ["codeine; codeine; phosphoric acid; \
+                        phosphoric acid; water", "C36 H50 N2 O15 P2",
+                        "1006.77", "2", "503.38"],
+                        ["codeine; phosphoric acid; 0.5H2O",
+                        "C18 H25.0 N1 O7.5 P1", "503.38", "-", "503.38"]]
+        df = pd.DataFrame(search_terms, columns=["Search term", "Evaluated as",
+                        "Calculated Volume", "Divide by", "Expected Volume"])
+        st.table(df)
+        st.markdown("**Charged species in formulae**")
         """
         Charges could potentially interfere with the parsing of chemical
         formulae. For example, two ways of representing an oxide ion:
@@ -142,7 +167,8 @@ elif option == "Help":
         df = pd.DataFrame(search_terms, columns=["Search term", "Evaluated as"])
         st.table(df)
         """
-        If including charges in your queries, ensure that the correct number of
+        Whilst is is recommended that charges be omitted from HofCalc queries,
+        if including charges in your queries, ensure that the correct number of
         atoms has been determined in the displayed atom counts or the
         downloadable summary file. For more information on formatting formulae,
         see the pyvalem documentation (link in references)
@@ -156,8 +182,8 @@ elif option == "Help":
         """
         st.latex("V = \\sum{n_{i}v_{i}(1 +  \\alpha(T - 298))}")
         """
-        Where $n_{i}$ and $v_{i}$ are the number and Hofmann volume of the $i$th
-        element in the chemical formula, and where
+        Where $n_{i}$ and $v_{i}$ are the number and Hofmann volume (at 298 K)
+        of the $i$th element in the chemical formula, and where
         """
         st.latex("\\alpha = 0.95 \\times 10^{-4} K^{-1}")
 
@@ -177,7 +203,7 @@ elif option == "Help":
     for i in range(3):
         st.write("")
     with st.beta_expander(label="References", expanded=False):
-        col1, col2 = st.beta_columns([3,2])
+        col1, col2 = st.beta_columns([2,2])
         with col1:
             st.write("Hofmann, D.W.M. (2002), Fast estimation of crystal \
                     densities. Acta Cryst. B, 58: 489-493.")
@@ -189,6 +215,12 @@ elif option == "Help":
             st.write("PubChem")
         with col2:
             st.write("https://pubchem.ncbi.nlm.nih.gov/")
+        st.write("")
+        st.write("")
+        with col1:
+            st.write("PubChemPy")
+        with col2:
+            st.write("https://github.com/mcs07/PubChemPy")
         st.write("")
         st.write("")
         with col1:
@@ -207,7 +239,7 @@ else:
             (see references)")
     st.write("All volumes are in cubic ångströms")
     volume_df = pd.DataFrame.from_dict(hu.volumes, columns=["Volume"],
-                                        orient="index", dtype=float)
-    st.table(volume_df.style.format('{:.2f}'))
+                                        orient="index", dtype=str)
+    st.table(volume_df)
 
 
