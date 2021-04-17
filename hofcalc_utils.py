@@ -29,7 +29,7 @@ def get_volume(formula, temperature=298):
         else:
             if element != "H":
                 eighteen_angstrom_volume += 18*formula[element]
-            if volumes[element] is not "N/A":
+            if volumes[element] != "N/A":
                 volume += (volumes[element] *
                             formula[element])*(1.+alpha*(temperature - 298.))
             else:
