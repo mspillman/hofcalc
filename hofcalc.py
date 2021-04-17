@@ -8,7 +8,7 @@ st.set_page_config(page_title='HofCalc WebApp', page_icon = None,
                     layout = 'centered', initial_sidebar_state = 'auto')
 
 st.title("HofCalc")
-st.markdown("*Crystallographic Volume Estimation*")
+st.markdown("*Hofmann Volume Calculator*")
 st.sidebar.title("Options")
 
 with st.sidebar:
@@ -199,7 +199,65 @@ elif option == "Help":
         df = pd.DataFrame(search_terms, columns=["Search term",
                     "Unit Cell Volume", "Hofmann Volume", "Vcell / VHofmann"])
         st.table(df)
+    for i in range(3):
+        st.write("")
+    with st.beta_expander(label="Summary files", expanded=False):
+        """
+        Each time HofCalc is used, a downloadable summary file is produced.
+        It is designed to serve both as a record of the query for future
+        reference and also as a method to sense-check the interpretation of the
+        entered terms, with links to the PubChem entries where relevant.
 
+        An example of the contents of the summary file for the following search
+        terms is given below.
+
+        "carbamazepine; indomethacin" with T = 293 and unit cell volume = 2921.6
+        """
+        summary = {
+            "combined": {
+                "C": 34,
+                "H": 28,
+                "N": 3,
+                "O": 5,
+                "Cl": 1
+            },
+            "individual": {
+                "carbamazepine": {
+                    "C": 15,
+                    "H": 12,
+                    "N": 2,
+                    "O": 1
+                },
+                "indomethacin": {
+                    "C": 19,
+                    "H": 16,
+                    "Cl": 1,
+                    "N": 1,
+                    "O": 4
+                }
+            },
+            "user_input": [
+                "carbamazepine",
+                "indomethacin"
+            ],
+            "PubChem CIDs": {
+                "carbamazepine": 2554,
+                "indomethacin": 3715
+            },
+            "PubChem URLs": {
+                "carbamazepine": "https://pubchem.ncbi.nlm.nih.gov/compound/2554",
+                "indomethacin": "https://pubchem.ncbi.nlm.nih.gov/compound/3715"
+            },
+            "individual_volumes": {
+                "carbamazepine": 303.86,
+                "indomethacin": 427.77
+            },
+            "V_Cell / V_Hofmann": 3.99,
+            "Temperature": 293,
+            "Hofmann Volume": 731.62,
+            "Hofmann Density": 1.35
+        }
+        st.write(summary)
     for i in range(3):
         st.write("")
     with st.beta_expander(label="References", expanded=False):
