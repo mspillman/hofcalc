@@ -111,6 +111,7 @@ if option == "Volume Estimation":
         st.markdown(href, unsafe_allow_html=True)
 
 elif option == "Help":
+    st.markdown("A blog post describing HofCalc and its use can be found [here](https://mspillman.github.io/blog/pxrd/indexing/2021/11/10/Hofcalc.html)")
     with st.beta_expander(label="Example inputs", expanded=False):
         st.markdown("**Basic**")
         """
