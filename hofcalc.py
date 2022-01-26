@@ -4,8 +4,16 @@ import hofcalc_utils as hu
 import json
 import base64
 
-st.set_page_config(page_title='HofCalc WebApp', page_icon = None,
+st.set_page_config(page_title='HofCalc WebApp', page_icon = ":test_tube:",
                     layout = 'centered', initial_sidebar_state = 'auto')
+
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 st.title("HofCalc")
 st.markdown("*Hofmann Volume Calculator*")
