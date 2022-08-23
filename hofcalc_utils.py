@@ -39,8 +39,8 @@ def get_volume(formula, temperature=298):
     return round(volume, 2)
 
 def get_formula():
-    user_input = st.text_input("Enter chemical formula or name. Multiple \
-                    entries should be separated by semicolons.",
+    user_input = st.text_input("Enter chemical formula, name or CAS number. \
+                    Multiple entries should be separated by semicolons.",
                     value='', max_chars=None, key=None, type='default')
     if user_input != "":
         cids = {}
