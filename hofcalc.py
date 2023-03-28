@@ -25,7 +25,7 @@ with st.sidebar:
                             "Help"])
 
 if option == "Volume Estimation":
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
 
     with col1:
         temperature = st.number_input("Temperature / K",
@@ -42,7 +42,7 @@ if option == "Volume Estimation":
     if molecular_formula is not None:
         st.markdown("**Results**")
         if len(molecular_formula["individual"].keys()) > 1:
-            with st.beta_expander(label="Individual", expanded=False):
+            with st.expander(label="Individual", expanded=False):
                 individual_volumes = {}
                 col1, col2, col3 = st.beta_columns(3)
                 with col1:
@@ -112,7 +112,7 @@ if option == "Volume Estimation":
 
 elif option == "Help":
     st.markdown("A blog post describing HofCalc and its use can be found [here](https://mspillman.github.io/blog/pxrd/indexing/2021/11/10/Hofcalc.html)")
-    with st.beta_expander(label="Example inputs", expanded=False):
+    with st.expander(label="Example inputs", expanded=False):
         st.markdown("**Basic**")
         """
         There are a number of acceptable inputs that can be used to estimate
@@ -184,7 +184,7 @@ elif option == "Help":
         """
     for i in range(3):
         st.write("")
-    with st.beta_expander(label="Temperature", expanded=False):
+    with st.expander(label="Temperature", expanded=False):
         """
         The temperature, $T$ (in kelvin) is automatically included in the volume
         calculation via the following equation:
@@ -198,7 +198,7 @@ elif option == "Help":
 
     for i in range(3):
         st.write("")
-    with st.beta_expander(label="Unit Cell", expanded=False):
+    with st.expander(label="Unit Cell", expanded=False):
         """
         If the volume of a unit cell is supplied, then the unit cell volume
         divided by the estimated molecular volume will also be shown.
@@ -210,7 +210,7 @@ elif option == "Help":
         st.table(df)
     for i in range(3):
         st.write("")
-    with st.beta_expander(label="Summary files", expanded=False):
+    with st.expander(label="Summary files", expanded=False):
         """
         Each time HofCalc is used, a downloadable summary file is produced.
         It is designed to serve both as a record of the query for future
@@ -269,8 +269,8 @@ elif option == "Help":
         st.write(summary)
     for i in range(3):
         st.write("")
-    with st.beta_expander(label="References", expanded=False):
-        col1, col2 = st.beta_columns([2,2])
+    with st.expander(label="References", expanded=False):
+        col1, col2 = st.columns([2,2])
         with col1:
             st.write("Hofmann, D.W.M. (2002), Fast estimation of crystal \
                     densities. Acta Cryst. B, 58: 489-493.")
