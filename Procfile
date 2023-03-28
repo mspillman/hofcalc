@@ -1,1 +1,1 @@
-web: streamlit run --server.enableCORS false --server.port $PORT hofcalc.py
+web: setup.sh && streamlit run --server.enableCORS false --server.port $PORT hofcalc.py
