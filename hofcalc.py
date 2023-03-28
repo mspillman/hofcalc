@@ -44,7 +44,7 @@ if option == "Volume Estimation":
         if len(molecular_formula["individual"].keys()) > 1:
             with st.expander(label="Individual", expanded=False):
                 individual_volumes = {}
-                col1, col2, col3 = st.beta_columns(3)
+                col1, col2, col3 = st.columns(3)
                 with col1:
                     st.markdown("***Input***")
                 with col2:
@@ -73,7 +73,7 @@ if option == "Volume Estimation":
         total_volume = hu.get_volume(molecular_formula["combined"],
                                         temperature=temperature)
 
-        col1, col2, col3, col4 = st.beta_columns(4)
+        col1, col2, col3, col4 = st.columns(4)
         with col1:
             mf = molecular_formula["combined"]
             mf_string = ""
@@ -278,28 +278,28 @@ elif option == "Help":
             st.write("https://doi.org/10.1107/S0108768101021814")
         st.write("")
         st.write("")
-        col1, col2 = st.beta_columns([2,2])
+        col1, col2 = st.columns([2,2])
         with col1:
             st.write("PubChem")
         with col2:
             st.write("https://pubchem.ncbi.nlm.nih.gov/")
         st.write("")
         st.write("")
-        col1, col2 = st.beta_columns([2,2])
+        col1, col2 = st.columns([2,2])
         with col1:
             st.write("PubChemPy")
         with col2:
             st.write("https://github.com/mcs07/PubChemPy")
         st.write("")
         st.write("")
-        col1, col2 = st.beta_columns([2,2])
+        col1, col2 = st.columns([2,2])
         with col1:
             st.write("PyValem")
         with col2:
             st.write("https://github.com/xnx/pyvalem")
         st.write("")
         st.write("")
-        col1, col2 = st.beta_columns([2,2])
+        col1, col2 = st.columns([2,2])
         with col1:
             st.write("HofCalc WebApp")
         with col2:
