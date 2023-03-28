@@ -1,5 +1,5 @@
 streamlit==0.79.0
 pandas==1.2.3
-numpy==1.19.1
+numpy
 pubchempy==1.0.4
 pyvalem==2.1.0
